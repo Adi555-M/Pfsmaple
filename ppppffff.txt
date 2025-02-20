@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parshv Foods - Fresh Vegetable Order</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #d0f0c0; /* Light green parrot color */
+      color: #333;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      text-align: center;
+      color: #4CAF50;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+      transition: border-color 0.3s ease;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+    .vegetable-list {
+      margin-bottom: 20px;
+    }
+    .vegetable-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .vegetable-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .unit-selection {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .price-display {
+      font-size: 0.9em;
+      color: #555;
+    }
+    .total {
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 20px;
+      color: #4CAF50;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #45a049;
+      transform: translateY(-3px);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+    .hidden {
+      display: none;
+    }
+    .how-to-order {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+    .how-to-order h2 {
+      color: #4CAF50;
+      text-align: center;
+    }
+    .how-to-order ol {
+      padding-left: 20px;
+    }
+    .order-history {
+      margin-top: 20px;
+    }
+    .order-history h2 {
+      color: #4CAF50;
+      text-align: center;
+    }
+    .order-item {
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .order-item p {
+      margin: 5px 0;
+    }
+    .separator {
+      border: 0;
+      height: 1px;
+      background: #ccc;
+      margin: 20px 0;
+    }
+    .bottom-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .bottom-buttons .btn {
+      width: 48%;
+    }
+/* Media Queries for Mobile Responsiveness */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5em;
+      }
+      .vegetable-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .unit-selection {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .price-display {
+        width: 100%;
+        text-align: right;
+      }
+      .bottom-buttons {
+        flex-direction: column;
+      }
+      .bottom-buttons .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Login Screen -->
+    <div id="loginScreen">
+      <h1>Welcome to Parshv Foods</h1>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginName">Your Name</label>
+          <input type="text" id="loginName" required>
+        </div>
+        <div class="form-group">
+          <label for="loginAddress">Delivery Address</label>
+          <input type="text" id="loginAddress" required>
+        </div>
+        <button type="submit" class="btn">Log In</button>
+      </form>
+    </div>
+
+    <!-- Order Screen -->
+    <div id="orderScreen" class="hidden">
+      <h1>Parshv Foods - Fresh Vegetable Order</h1>
+      <form id="orderForm">
+        <div class="vegetable-list" id="vegetableList">
+          <!-- Vegetables will be added here dynamically -->
+        </div>
+        <div class="total">
+          Total: ₹<span id="totalAmount">0.00</span>
+        </div>
+        <button type="submit" class="btn">Place Order on WhatsApp</button>
+        
+        <!-- Horizontal Line Separator -->
+        <hr class="separator">
+        
+        <!-- Bottom Buttons -->
+        <div class="bottom-buttons">
+          <button type="button" class="btn" id="howToOrderButton">How to Order</button>
+          <button type="button" class="btn" id="orderHistoryButton">Order History</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- How to Order Section -->
+    <div id="howToOrderSection" class="hidden how-to-order">
+      <h2>How to Order</h2>
+      <ol>
+        <li>Log in with your name and address.</li>
+        <li>Select the vegetables and quantities you want to order.</li>
+        <li>Click "Place Order on WhatsApp" to confirm your order.</li>
+        <li>You will be redirected to WhatsApp to finalize the order.</li>
+      </ol>
+      <button class="btn" id="backToOrderButton">Back to Order Screen</button>
+    </div>
+
+    <!-- Order History Section -->
+    <div id="orderHistorySection" class="hidden order-history">
+      <h2>Order History</h2>
+      <div id="orderHistory"></div>
+      <button class="btn" id="backToOrderButton2">Back to Order Screen</button>
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const loginScreen = document.getElementById('loginScreen');
+    const orderScreen = document.getElementById('orderScreen');
+    const loginForm = document.getElementById('loginForm');
+    const loginName = document.getElementById('loginName');
+    const loginAddress = document.getElementById('loginAddress');
+    const vegetableList = document.getElementById('vegetableList');
+    const howToOrderButton = document.getElementById('howToOrderButton');
+    const orderHistoryButton = document.getElementById('orderHistoryButton');
+    const howToOrderSection = document.getElementById('howToOrderSection');
+    const orderHistorySection = document.getElementById('orderHistorySection');
+    const orderHistory = document.getElementById('orderHistory');
+    const backToOrderButton = document.getElementById('backToOrderButton');
+    const backToOrderButton2 = document.getElementById('backToOrderButton2');
+
+    // Check if user is already logged in
+    const savedName = localStorage.getItem('userName');
+    const savedAddress = localStorage.getItem('userAddress');
+
+    if (savedName && savedAddress) {
+      loginScreen.classList.add('hidden');
+      orderScreen.classList.remove('hidden');
+    }
+
+    // Event Listeners
+    howToOrderButton.addEventListener('click', function () {
+      loginScreen.classList.add('hidden');
+      orderScreen.classList.add('hidden');
+      howToOrderSection.classList.remove('hidden');
+      orderHistorySection.classList.add('hidden');
+    });
+
+    orderHistoryButton.addEventListener('click', function () {
+      loginScreen.classList.add('hidden');
+      orderScreen.classList.add('hidden');
+      howToOrderSection.classList.add('hidden');
+      orderHistorySection.classList.remove('hidden');
+      loadOrderHistory();
+    });
+
+    backToOrderButton.addEventListener('click', function () {
+      loginScreen.classList.add('hidden');
+      orderScreen.classList.remove('hidden');
+      howToOrderSection.classList.add('hidden');
+      orderHistorySection.classList.add('hidden');
+    });
+
+    backToOrderButton2.addEventListener('click', function () {
+      loginScreen.classList.add('hidden');
+      orderScreen.classList.remove('hidden');
+      howToOrderSection.classList.add('hidden');
+      orderHistorySection.classList.add('hidden');
+    });
+
+    // Login Form Submission
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = loginName.value;
+      const address = loginAddress.value;
+      localStorage.setItem('userName', name);
+      localStorage.setItem('userAddress', address);
+      loginScreen.classList.add('hidden');
+      orderScreen.classList.remove('hidden');
+    });
+
+    // Vegetables Data
+    const vegetables = [
+      { name: 'ટામેટાં', price: 30, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'ફુલાવર', price: 50, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'દેશી કોબીજ', price: 30, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'ભીંડા', price: 90, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'વટાણા', price: 50, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'કાચા કેળા', price: 50, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'દૂધી', price: 50, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'દેશી દૂધી', price: 80, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'તુરીયું', price: 80, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'કારેલા', price: 80, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'ટિંડોળા', price: 120, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'ચોળી', price: 130, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'પાપડી', price: 160, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'તુવેર', price: 130, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'દેશી કાકડી', price: 80, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'ગવાર', price: 120, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'મેથી', price: 40, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'ચોલિયા ની ભાજી', price: 80, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'મકાઈ', price: 40, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'લીંબુ', price: 80, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'કેપ્સિકમ', price: 60, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'કોથમીર', price: 60, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'આમળા', price: 80, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'ફણસી', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'લાલ મોગરી', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'લીલી મોગરી', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'રેગ્યુલર મરચા', price: 70, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'મોરા મરચા', price: 100, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'લાલ મરચા', price: 120, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'લવીંગ્યા મરચા', price: 70, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'કાચી કેરી', price: 180, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'પરવર', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'ફુદિનો', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'મીઠો લીંમડો', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'બ્રોકલી', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'જુગની', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'બેબીકોન', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'બેસિલ પત્તા', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'લાલ કેપ્સિકમ', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'પીળું કેપ્સિકમ', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'લીલી ચા', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+      { name: 'સફરજન', price: 0, unit: 'kg', options: ['kg', 'gram'] },
+    ];
+
+    // Function to render vegetables
+    function renderVegetables() {
+      vegetableList.innerHTML = vegetables.map(veg => `
+        <div class="vegetable-item">
+          <span>${veg.name} ₹${veg.price}/${veg.unit}</span>
+          <div class="unit-selection">
+            <input type="number" min="0" value="0" id="${veg.name.toLowerCase()}Qty">
+            <select id="${veg.name.toLowerCase()}Unit">
+              ${veg.options.map(option => `<option value="${option}">${option}</option>`).join('')}
+            </select>
+          </div>
+          <div class="price-display" id="${veg.name.toLowerCase()}Price">₹0.00</div>
+        </div>
+      `).join('');
+    }
+
+    // Function to calculate total price
+    function calculateTotal() {
+      let total = 0;
+      vegetables.forEach(veg => {
+        const qtyInput = document.getElementById(`${veg.name.toLowerCase()}Qty`);
+        const unitSelect = document.getElementById(`${veg.name.toLowerCase()}Unit`);
+        const qty = parseFloat(qtyInput.value) || 0;
+        const unit = unitSelect.value;
+        let price = veg.price;
+
+        // Convert grams to kilograms if necessary
+        if (unit === 'gram') {
+          price = price / 1000;
+        }
+
+        const itemTotal = qty * price;
+        total += itemTotal;
+
+        // Update the price display for each vegetable
+        const priceDisplay = document.getElementById(`${veg.name.toLowerCase()}Price`);
+        priceDisplay.textContent = `₹${itemTotal.toFixed(2)}`;
+      });
+
+      // Update the total amount
+      const totalAmount = document.getElementById('totalAmount');
+      totalAmount.textContent = total.toFixed(2);
+    }
+
+    // Function to load order history
+    function loadOrderHistory() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orderHistory.innerHTML = orders.map(order => `
+        <div class="order-item">
+          <p><strong>Name:</strong> ${order.name}</p>
+          <p><strong>Address:</strong> ${order.address}</p>
+          <p><strong>Order:</strong> ${order.items}</p>
+          <p><strong>Total:</strong> ₹${order.total}</p>
+          <p><strong>Date:</strong> ${order.date}</p>
+        </div>
+      `).join('');
+    }
+
+    // Event listener for quantity and unit changes
+    vegetableList.addEventListener('input', calculateTotal);
+
+    // Order Form Submission
+    document.getElementById('orderForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = localStorage.getItem('userName');
+      const address = localStorage.getItem('userAddress');
+      const items = vegetables.map(veg => {
+        const qtyInput = document.getElementById(`${veg.name.toLowerCase()}Qty`);
+        const unitSelect = document.getElementById(`${veg.name.toLowerCase()}Unit`);
+        const qty = parseFloat(qtyInput.value) || 0;
+        const unit = unitSelect.value;
+        let price = veg.price;
+
+        // Convert grams to kilograms if necessary
+        if (unit === 'gram') {
+          price = price / 1000;
+        }
+
+        const itemTotal = qty * price;
+
+        if (qty > 0) {
+          return `${veg.name} - ${qty} ${unit} @ ₹${veg.price}/${veg.unit} = ₹${itemTotal.toFixed(2)}`;
+        }
+        return null;
+      }).filter(item => item !== null).join('\n');
+
+      const total = parseFloat(document.getElementById('totalAmount').textContent);
+
+      if (items.length === 0) {
+        alert('Please select at least one vegetable to place an order.');
+        return;
+      }
+
+      const order = {
+        name,
+        address,
+        items,
+        total,
+        date: new Date().toLocaleString(),
+      };
+
+      // Save order to history
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orders.push(order);
+      localStorage.setItem('orders', JSON.stringify(orders));
+
+      // Redirect to WhatsApp
+      const message = `Name: ${name}\nAddress: ${address}\nOrder:\n${items}\nTotal: ₹${total.toFixed(2)}`;
+      const whatsappUrl = `https://wa.me/9879876030?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+
+      // Reset form
+      document.getElementById('orderForm').reset();
+      calculateTotal();
+    });
+
+    // Initial render
+    renderVegetables();
+    calculateTotal();
+  </script>
+</body>
+</html>
